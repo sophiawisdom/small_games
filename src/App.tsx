@@ -5,9 +5,9 @@ import GameContainer from "./GameContainer"
 const App: React.FC = () => {
   return (
     <div className="App">
-      <GameContainer game="test_game" />
+      {/* <GameContainer game="test_game" /> */}
       <br />
-      <GameContainer game="test_dwitter" />
+      <GameContainer game="test_dwitter" scale={2} />
     </div>
   );
 }

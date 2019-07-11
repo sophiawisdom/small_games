@@ -1,4 +1,4 @@
-import canvasContext, { canvas } from "/iframe_environment.js"
+ import canvasContext, { canvas } from "/iframe_environment.js"
 
 var enabled = false
 
