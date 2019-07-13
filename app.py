@@ -36,5 +36,9 @@ def send_iframe_environment() :
 def send_cleanup() :
     return send_file("build/cleanup_iframe.js")
 
+@app.route("/favicon.ico")
+def send_favicon():
+    return send_file("build/favicon.ico")
+
 
 app.run(host="0.0.0.0", port=5000, debug=True)
