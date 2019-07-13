@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, send_from_directory, send_file
-from werkzeug.utils import secure_filename
 import random
 import os
 
@@ -40,5 +39,6 @@ def send_cleanup() :
 def send_favicon():
     return send_file("build/favicon.ico")
 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
-app.run(host="0.0.0.0", port=5000, debug=True)

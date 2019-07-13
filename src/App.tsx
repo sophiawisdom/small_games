@@ -7,7 +7,7 @@ const App: React.FC = () => {
     <div className="App">
       {/* <GameContainer game="test_game" /> */}
       <br />
-      <GameContainer game="test_dwitter" scale={.5} />
+      <GameContainer game="another_dwitter_test" />
     </div>
   );
 }

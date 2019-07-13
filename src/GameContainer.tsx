@@ -5,13 +5,13 @@ type GameContainerProps  = {
     scale?: number
 }
 
-const GameContainer: FunctionComponent<GameContainerProps> = ({game, scale = 1} : GameContainerProps) => {
+const GameContainer: FunctionComponent<GameContainerProps> = ({game} : GameContainerProps) => {
     return (
         <iframe
         sandbox="allow-scripts allow-pointer-lock allow-same-origin" // TODO(wwisdom) - move to different sandboxing mechanism?
         title={`Game ${game}`}
-        src={`/iframe_for/${game}`}
-        style={{width: "1000px", height: "563px", overflow: "hidden"}} />
+        src={`${process.env.PUBLIC_URL}/iframe_for/${game}`}
+        style={{width: "800px", height: "450px", overflow: "hidden"}} />
         )
 }
 

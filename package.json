@@ -32,5 +32,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "homepage": "https://2a5uh3peic.execute-api.us-west-1.amazonaws.com/dev"
 }
