@@ -7,16 +7,21 @@
     "@types/node": "12.6.2",
     "@types/react": "16.8.23",
     "@types/react-dom": "16.8.4",
+    "npm-watch": "^0.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "typescript": "3.5.3"
   },
+  "watch": {
+    "build": "{src}/*.js"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "watch": "npm-watch"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -33,5 +38,5 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://2a5uh3peic.execute-api.us-west-1.amazonaws.com/dev"
+  "homepage": "https://2a5uh3peic.execute-api.us-west-1.amazonaws.com"
 }
