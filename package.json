@@ -14,7 +14,13 @@
     "typescript": "3.5.3"
   },
   "watch": {
-    "build": "{src}/*.js"
+    "build": {
+      "patterns": [
+        "src"
+      ],
+      "extensions": "tsx,ts",
+      "quiet": false
+    }
   },
   "scripts": {
     "start": "react-scripts start",
