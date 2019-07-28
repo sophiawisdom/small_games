@@ -1,4 +1,4 @@
- import canvasContext, { canvas } from "/iframe_environment.js"
+ import canvasContext, { canvas } from "/js_environments/es6_iframe_environment.js"
 
 var enabled = false
 
@@ -24,4 +24,4 @@ canvas.addEventListener("mousemove", e => {
     canvasContext.fillRect(e.pageX, e.pageY, dist/100, dist/100)
 })
 
-console.log("test_game.js finished execution")
+console.log("test_game completed running")

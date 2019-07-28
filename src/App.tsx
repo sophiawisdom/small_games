@@ -7,7 +7,7 @@ const App: React.FC = () => {
     <div className="App">
       {/* <GameContainer game="test_game" /> */}
       <br />
-      <GameContainer game="another_dwitter_test" />
+      <GameContainer game="test_dwitter_for_es6" environment="es6" />
     </div>
   );
 }

@@ -16,7 +16,13 @@ def main():
 
 @app.route("/iframe_for/<game>")
 def render_iframe(game):
-    return render_template("iframe.html", game=game)
+    env = request.args.get("environment", "dwitter")
+    if env == "dwitter":
+        return render_template("dwitter_iframe.html", game=game)
+    elif env == "es6":
+        return render_template("es6_iframe.html", game=game)
+    else:
+        raise ValueError(f"Unable to find environment {env}.")
 
 
 @app.route("/sample_games/<filename>")
@@ -27,9 +33,9 @@ def download_game(filename):
 def download_manifest():
     return send_file("build/manifest.json")
 
-@app.route("/iframe_environment.js")
-def send_iframe_environment() :
-    return send_file("build/iframe_environment.js")
+@app.route("/js_environments/<file>")
+def send_iframe_environment(file):
+    return send_from_directory("build/js_environments", file)
 
 @app.route("/cleanup_iframe.js")
 def send_cleanup() :
