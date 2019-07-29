@@ -2685,8 +2685,6 @@ function init() {
           spawnParticles(2, source.x, source.y, 0, -20);
         }
         window.timestep++
-
-        console.log(nauseatedFace.worldVisible)
     }
     window.setInterval(update, 1000 / 60);
     //window.setInterval(spawnRain, 10);
