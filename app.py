@@ -17,13 +17,11 @@ def main():
 @cross_origin()
 def render_iframe(game):
     env = request.args.get("environment", "dwitter")
-    if env == "dwitter":
-        return render_template("dwitter_iframe.html", game=game)
-    elif env == "es6":
-        return render_template("es6_iframe.html", game=game)
+    supported = {'dwitter', 'es6', 'plain'}
+    if env in supported:
+        return render_template(f"{env}_iframe.html", game=game)
     else:
         raise ValueError(f"Unable to find environment {env}.")
-
 
 @app.route("/sample_games/<filename>")
 @cross_origin()
@@ -38,6 +36,10 @@ def download_manifest():
 @cross_origin()
 def send_iframe_environment(file):
     return send_from_directory("build/js_environments", file)
+
+@app.route("/assets/<file>")
+def send_asset(file):
+    return send_from_directory("build/assets", file)
 
 @app.route("/cleanup_iframe.js")
 def send_cleanup() :
