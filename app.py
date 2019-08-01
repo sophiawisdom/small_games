@@ -1,13 +1,12 @@
 from flask import Flask, render_template, request, send_from_directory, send_file
+from flask_cors import CORS, cross_origin
 import random
 import os
 
-hexes = '0123456789abcdef'
-
-def get_id(len=16):
-    return ''.join(random.choice(hexes) for i in range(16))
-
 app = Flask(__name__, static_folder="build/static")
+
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/')
 def main():
@@ -15,6 +14,7 @@ def main():
 
 
 @app.route("/iframe_for/<game>")
+@cross_origin()
 def render_iframe(game):
     env = request.args.get("environment", "dwitter")
     if env == "dwitter":
@@ -26,6 +26,7 @@ def render_iframe(game):
 
 
 @app.route("/sample_games/<filename>")
+@cross_origin()
 def download_game(filename):
     return send_from_directory("sample_games", filename)
 
@@ -34,6 +35,7 @@ def download_manifest():
     return send_file("build/manifest.json")
 
 @app.route("/js_environments/<file>")
+@cross_origin()
 def send_iframe_environment(file):
     return send_from_directory("build/js_environments", file)
 
