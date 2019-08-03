@@ -17,7 +17,7 @@ def main():
 @cross_origin()
 def render_iframe(game):
     env = request.args.get("environment", "dwitter")
-    supported = {'dwitter', 'es6', 'plain'}
+    supported = {'dwitter', 'es6', 'plain', 'offscreen_canvas'}
     if env in supported:
         return render_template(f"{env}_iframe.html", game=game)
     else:
