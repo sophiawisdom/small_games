@@ -18,7 +18,7 @@ function update(t) {
       const Y = Math.sin(i/159)
       const xCoord = 900 + 500*i*Math.sin(Y*Math.sin(t/20)*20*Math.sin(t))/900
       const yCoord = 900 - 800*Math.pow(Y, 2)
-      canvasContext.lineTo(xCoord, yCoord)
+      canvasContext.lineTo(xCoord/2, yCoord/2)
   }
   canvasContext.fill()
 }
