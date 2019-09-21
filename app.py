@@ -10,7 +10,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/')
 def main():
-    return send_file("build/index.html")
+    try:
+        return send_file("build/index.html")
+    except FileNotFoundError:
+        return "Unable to find index.html. This probably means that the website hasn't built yet.", 500
 
 
 @app.route("/iframe_for/<game>")
