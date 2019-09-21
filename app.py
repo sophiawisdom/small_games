@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, send_from_directory, send_file
+from flask import Flask, render_template, request, send_from_directory, send_file, render_template_string
 from flask_cors import CORS, cross_origin
 import random
+import requests
 import os
 
 app = Flask(__name__, static_folder="build/static")
@@ -51,6 +52,21 @@ def send_cleanup() :
 @app.route("/favicon.ico")
 def send_favicon():
     return send_file("build/favicon.ico")
+
+def get_code_for_dweet(id):
+	r = requests.get(f"https://dweet.dwitter.net/id/{id}")
+	lines = r.text.split("\n")
+	code_begin = lines.index('    function u(t) {')
+	code_length = lines[code_begin:].index('    }')
+	code = "\n".join(lines[code_begin+1:code_begin+code_length])
+	return code
+
+@app.route("/offscreen_for/<int:dweet_id>.js")
+def steal_dweet(dweet_id):
+    code = get_code_for_dweet(dweet_id)
+    with open("build/js_environments/dwitter_stealer.js", 'r') as file:
+        return render_template_string(file.read(), stolen_dwitter_code=code)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

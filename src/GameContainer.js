@@ -47,7 +47,8 @@ const GameContainer = props => {
         console.log("Canvas ref is filled in to", canvasRef, "with current", canvasRef.current)
 
         const offscreen = canvasRef.current.transferControlToOffscreen()
-        const worker = new Worker(`/sample_games/${props.game}.js`)
+        const url = props.game ? `/sample_games/${props.game}.js` : `/offscreen_for/${props.dwitter_id}.js`
+        const worker = new Worker(url)
         worker.postMessage({ canvas: offscreen }, [offscreen]) // This has to be [offscreen]. Don't know why.
         setWorker(worker)
         setOffscreenCanvas(offscreen)

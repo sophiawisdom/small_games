@@ -11,8 +11,7 @@ const App = () => {
   return (
     <MainWrapper className="App">
       <GameContainer game="offscreen_dwitter_test"/>
-      <GameContainer game="offscreen_dwitter_test_2"/>
-      <GameContainer game="offscreen_dwitter_test_3"/>
+      <GameContainer dwitter_id="15736"/>
     </MainWrapper>
   );
 }
