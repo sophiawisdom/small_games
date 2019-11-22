@@ -12,6 +12,7 @@ const App = () => {
     <MainWrapper className="App">
       <GameContainer game="offscreen_dwitter_test"/>
       <GameContainer dwitter_id="15736"/>
+      <GameContainer game="spinloop"/>
     </MainWrapper>
   );
 }

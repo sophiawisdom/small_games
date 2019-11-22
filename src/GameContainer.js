@@ -28,6 +28,8 @@ const cleanup = worker => {
     }
 }
 
+console.log("v4")
+
 const GameContainer = props => {
     const canvasRef = useRef(null)
     const [activeWorker, setWorker] = useState(null);
@@ -35,32 +37,41 @@ const GameContainer = props => {
 
     useEffect(() => {
         if (canvasRef.current) {
-            canvasRef.current.width = 1920;
-            canvasRef.current.height = 1080;
+            if (canvasRef.current.width !== 1920) {
+                console.log("about to set width")
+                canvasRef.current.width = 1920;
+            }
+            if (canvasRef.current.height !== 1080) {
+                console.log("about to set height")
+                canvasRef.current.height = 1080;
+            }
         }
+        /*
         if (activeWorker) {
             cleanup(activeWorker)
             setWorker(null)
             setOffscreenCanvas(null)
         }
-
-        console.log("Canvas ref is filled in to", canvasRef, "with current", canvasRef.current)
-
-        const offscreen = canvasRef.current.transferControlToOffscreen()
-        const url = props.game ? `/sample_games/${props.game}.js` : `/offscreen_for/${props.dwitter_id}.js`
-        const worker = new Worker(url)
-        worker.postMessage({ canvas: offscreen }, [offscreen]) // This has to be [offscreen]. Don't know why.
-        setWorker(worker)
-        setOffscreenCanvas(offscreen)
+        */
+        
+        if (!offscreenCanvas) {
+            console.log("transferring control from canvas ", canvasRef.current, "Offscreen canvas is ", offscreenCanvas)
+            const offscreen = canvasRef.current.transferControlToOffscreen()
+            const url = props.game ? `/sample_games/${props.game}.js` : `/offscreen_for/${props.dwitter_id}.js`
+            const worker = new Worker(url)
+            worker.postMessage({ canvas: offscreen }, [offscreen]) // This has to be [offscreen] not just offscreen. Don't know why.
+            setWorker(worker)
+            setOffscreenCanvas(offscreen)
+        }
 
         return () => cleanup(activeWorker)
-    }, [canvasRef])
+    }, [canvasRef, activeWorker, props.dwitter_id, props.game, offscreenCanvas])
 
     return (
         <SmallerContainer>
             <TransformedCanvas
             ref={canvasRef}
-            id={`canvas_${props.game}`}
+            id={props.game ? `canvas_${props.game}` : `canvas_dwitter_${props.dwitter_id}`}
             />
         </SmallerContainer>
     )
