@@ -36,11 +36,6 @@ const cleanup = worker => {
     }
 }
 
-<<<<<<< HEAD
-const onMessage = message => {
-    console.log("Got message from worker!", message)
-}
-
 const getDefaults = config => {
     let defaults = {}
     console.log("got config", config)
@@ -49,9 +44,6 @@ const getDefaults = config => {
     });
     return defaults;
 }
-=======
-console.log("v4")
->>>>>>> 161ce4e496738c4b1260602fa3a5272440a5ebea
 
 const GameContainer = props => {
     const canvasRef = useRef(null)
@@ -63,24 +55,28 @@ const GameContainer = props => {
     const [isPaused, setPaused] = useState(false);
 
     useEffect(() => {
+        const url = props.game ? `/sample_games/${props.game}.js` : `/offscreen_for/${props.dwitter_id}.js`
+        const worker = new Worker(url)
+    }, [props.dwitter_id, props.game])
+
+    useEffect(() => {
         if (canvasRef.current) {
             if (canvasRef.current.width !== 1920) {
-                console.log("about to set width")
                 canvasRef.current.width = 1920;
             }
             if (canvasRef.current.height !== 1080) {
-                console.log("about to set height")
                 canvasRef.current.height = 1080;
             }
         }
-        /*
         if (activeWorker) {
             cleanup(activeWorker)
             setWorker(null)
             setOffscreenCanvas(null)
         }
 
+        console.log("about to do offscreen on canvas", canvasRef.current)
         const offscreen = canvasRef.current.transferControlToOffscreen()
+        console.log("just did offscreen")
         const url = props.game ? `/sample_games/${props.game}.js` : `/offscreen_for/${props.dwitter_id}.js`
         const worker = new Worker(url)
         worker.onmessage = message => {
@@ -96,7 +92,7 @@ const GameContainer = props => {
         setOffscreenCanvas(offscreen);
 
         return () => cleanup(activeWorker)
-    }, [canvasRef, activeWorker, props.dwitter_id, props.game, offscreenCanvas])
+    }, [canvasRef, props.dwitter_id, props.game])
 
     useEffect(() => {
         if (activeWorker && currentGameVars) {
@@ -109,7 +105,7 @@ const GameContainer = props => {
     }
     const reset = () => {
         clear();
-        const defaults = getDefaults(varsConfig)
+        const defaults = getDefaults(varsConfig);
         activeWorker.postMessage({"type": "set_variables", "vars": defaults});
         setCurrentGameVars(defaults);
     }
@@ -140,6 +136,7 @@ const GameContainer = props => {
                     </OnRight>
                 </SmallerContainer>
             </div>
+            
             <Button variant="contained" onClick={clear}>Clear canvas</Button>
             <Button variant="contained" onClick={reset}>Reset variables</Button>
             <Button variant="contained" onClick={pause}>{isPaused ? "Unpause" : "Pause"}</Button>
