@@ -75,6 +75,7 @@ def steal_dweet(dweet_id):
     code = get_code_for_dweet(dweet_id).strip()
     print("Code is", code)
     new_code, configed_literals = parse_js.get_literals_and_transform_string(code)
+    print("Configed literals are", configed_literals)
     json_literals = json.dumps(configed_literals)
     with open("build/js_environments/dwitter_stealer.js", 'r') as file:
         return render_template_string(str(get_base(), 'utf-8') + file.read(),

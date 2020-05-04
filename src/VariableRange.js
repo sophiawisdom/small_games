@@ -9,7 +9,7 @@ const FormContainer = ({defaultValue, currentValue, name, onChange, max = null, 
     </Typography>
   <Slider
     defaultValue={defaultValue}
-    step={1}
+    step={defaultValue < 10 ? defaultValue/20 : 1}
     min={min ? min : 0}
     max={max ? max : defaultValue*2}
     onChange={(event, newValue) => onChange(newValue)}

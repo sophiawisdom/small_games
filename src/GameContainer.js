@@ -47,72 +47,59 @@ const getDefaults = config => {
 
 const GameContainer = props => {
     const canvasRef = useRef(null)
-    const [activeWorker, setWorker] = useState(null);
-    const [offscreenCanvas, setOffscreenCanvas] = useState(null);
+    const [worker, setWorker] = useState(null);
     const [varsConfig, setVarsConfig] = useState(null);
     const [currentGameVars, setCurrentGameVars] = useState(null);
     const [finishedLoading, setFinishedLoading] = useState(false);
     const [isPaused, setPaused] = useState(false);
 
     useEffect(() => {
-        const url = props.game ? `/sample_games/${props.game}.js` : `/offscreen_for/${props.dwitter_id}.js`
-        const worker = new Worker(url)
-    }, [props.dwitter_id, props.game])
+        console.log("canvas ref is", canvasRef)
+        // Because we set the height/width in javascript, to the drawing code
+        // the width and height are 1920/1080, but on the screen they can be
+        // scaled in CSS.
+        canvasRef.current.width = 1920;
+        canvasRef.current.height = 1080;
 
-    useEffect(() => {
-        if (canvasRef.current) {
-            if (canvasRef.current.width !== 1920) {
-                canvasRef.current.width = 1920;
-            }
-            if (canvasRef.current.height !== 1080) {
-                canvasRef.current.height = 1080;
-            }
-        }
-        if (activeWorker) {
-            cleanup(activeWorker)
-            setWorker(null)
-            setOffscreenCanvas(null)
-        }
-
-        console.log("about to do offscreen on canvas", canvasRef.current)
         const offscreen = canvasRef.current.transferControlToOffscreen()
-        console.log("just did offscreen")
         const url = props.game ? `/sample_games/${props.game}.js` : `/offscreen_for/${props.dwitter_id}.js`
-        const worker = new Worker(url)
-        worker.onmessage = message => {
-            // Each of these causes a re-render, so you need to set
-            // current game vars before default game vars. because
-            // we assume current contains everything in default.
+        const newWorker = new Worker(url)
+        newWorker.onmessage = message => {
+            // Each of these causes a re-render, so we include
+            // setFinishedLoading to make it clear when data
+            // has been loaded.
             setVarsConfig(message.data);
             setCurrentGameVars(getDefaults(message.data))
             setFinishedLoading(true)
         }
-        worker.postMessage({ type: "init", canvas: offscreen }, [offscreen]); // This has to be [offscreen]. Don't know why.
-        setWorker(worker);
-        setOffscreenCanvas(offscreen);
+        newWorker.postMessage({ type: "init", canvas: offscreen }, [offscreen]);
+        setWorker(newWorker);
 
-        return () => cleanup(activeWorker)
-    }, [canvasRef, props.dwitter_id, props.game])
+        return () => cleanup(worker)
+    }, [props.game, props.dwitter_id])
 
     useEffect(() => {
-        if (activeWorker && currentGameVars) {
-            activeWorker.postMessage({"type": "set_variables", "vars": currentGameVars});
+        if (worker && currentGameVars) {
+            worker.postMessage({"type": "set_variables", "vars": currentGameVars});
         }
     }, [currentGameVars])
 
     const clear = () => {
-        activeWorker.postMessage({"type": "clear"})
+        worker.postMessage({"type": "clear"})
     }
     const reset = () => {
         clear();
         const defaults = getDefaults(varsConfig);
-        activeWorker.postMessage({"type": "set_variables", "vars": defaults});
+        worker.postMessage({"type": "set_variables", "vars": defaults});
         setCurrentGameVars(defaults);
     }
     const pause = () => {
-        activeWorker.postMessage({"type": "pause"})
+        worker.postMessage({"type": "pause"})
         setPaused(!isPaused);
     }
+
+    // Force re-render/re-creation of the canvas.
+    const key = props.game ? props.game : props.dwitter_id
 
     return (
         <div>
@@ -121,6 +108,7 @@ const GameContainer = props => {
                     <TransformedCanvas
                     ref={canvasRef}
                     id={`canvas_${props.game}`}
+                    key={key}
                     />
                     <OnRight>
                         { finishedLoading ? varsConfig.map(conf =>
@@ -136,7 +124,7 @@ const GameContainer = props => {
                     </OnRight>
                 </SmallerContainer>
             </div>
-            
+
             <Button variant="contained" onClick={clear}>Clear canvas</Button>
             <Button variant="contained" onClick={reset}>Reset variables</Button>
             <Button variant="contained" onClick={pause}>{isPaused ? "Unpause" : "Pause"}</Button>
