@@ -1,21 +1,54 @@
-let animationWorker = null;
-var canvas, canvasContext;
-var time = 0;
-
-const R = (r, g, b, a) => `rgba(${r|0}, ${g|0}, ${b|0}, ${a === undefined ? 1 : a|0})`
-
-self.onmessage = function(e) {
-  canvas = e.data.canvas
-  canvasContext = canvas.getContext("2d")
-  setInterval(() => {
-    update(time++/60)
-  }, 1000/60)
-}
+let config = [
+  {
+    default: 1000,
+    description: "Origin on x-axis",
+    key: "x_base"
+  },
+  {
+    default: 500,
+    description: "Origin on y-axis",
+    key: "y_base"
+  },
+  {
+    default: 100,
+    description: "First multiplier",
+    key: "first_mult"
+  },
+  {
+    default: 400,
+    description: "Second multiplier",
+    key: "second_mult"
+  },
+  {
+    default: 6,
+    description: "Number of blocks",
+    key: "iterations"
+  },
+  {
+    default: 50,
+    description: "Size of blocks",
+    key: "size"
+  },
+  {
+    default: 255,
+    description: "Color",
+    key: "color",
+    max: 255,
+    min: 0
+  }
+]
 
 function update(t) {
-  canvasContext.fillStyle=R(Math.sin(t)*255,Math.cos(t)*255,255)
+  context.fillStyle=R(Math.sin(t)*variables.color, Math.cos(t)*variables.color , variables.color)
     
-  for(var i=0;i<6;i++) {
-    canvasContext.fillRect(1e3+(Math.sin(t)*100)+Math.cos(t+i)*400,500+(Math.cos(t)*100)+Math.sin(t+i)*400,50,50)
+  for(let i=0; i < variables.iterations; i++) {
+    const x_sin = (Math.sin(t)*variables.first_mult);
+    const x_cos = Math.cos(t+i)*variables.second_mult;
+    const x = variables.x_base + x_sin + x_cos;
+    
+    const y_sin = Math.sin(t+i)*variables.second_mult;
+    const y_cos = Math.cos(t)*variables.first_mult;
+    const y = variables.y_base + y_cos + y_sin
+    context.fillRect(x,y,variables.size,variables.size)
   }
 }

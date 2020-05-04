@@ -3,6 +3,9 @@ from flask_cors import CORS, cross_origin
 import random
 import requests
 import os
+import json
+
+import parse_js
 
 app = Flask(__name__, static_folder="build/static")
 
@@ -30,7 +33,10 @@ def render_iframe(game):
 @app.route("/sample_games/<filename>")
 @cross_origin()
 def download_game(filename):
-    return send_from_directory("sample_games", filename)
+    resp = send_from_directory("sample_games", filename)
+    resp.direct_passthrough = False
+    resp.data = get_base() + resp.data
+    return resp
 
 @app.route("/manifest.json")
 def download_manifest():
@@ -61,11 +67,19 @@ def get_code_for_dweet(id):
 	code = "\n".join(lines[code_begin+1:code_begin+code_length])
 	return code
 
+def get_base():
+    return open("build/js_environments/base_environment.js", 'rb').read()
+
 @app.route("/offscreen_for/<int:dweet_id>.js")
 def steal_dweet(dweet_id):
-    code = get_code_for_dweet(dweet_id)
+    code = get_code_for_dweet(dweet_id).strip()
+    print("Code is", code)
+    new_code, configed_literals = parse_js.get_literals_and_transform_string(code)
+    json_literals = json.dumps(configed_literals)
     with open("build/js_environments/dwitter_stealer.js", 'r') as file:
-        return render_template_string(file.read(), stolen_dwitter_code=code)
+        return render_template_string(str(get_base(), 'utf-8') + file.read(),
+        stolen_dwitter_code=new_code,
+        config=json_literals)
 
 
 if __name__ == "__main__":
