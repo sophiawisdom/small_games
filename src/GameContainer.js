@@ -36,6 +36,7 @@ const cleanup = worker => {
     }
 }
 
+<<<<<<< HEAD
 const onMessage = message => {
     console.log("Got message from worker!", message)
 }
@@ -48,6 +49,9 @@ const getDefaults = config => {
     });
     return defaults;
 }
+=======
+console.log("v4")
+>>>>>>> 161ce4e496738c4b1260602fa3a5272440a5ebea
 
 const GameContainer = props => {
     const canvasRef = useRef(null)
@@ -60,9 +64,16 @@ const GameContainer = props => {
 
     useEffect(() => {
         if (canvasRef.current) {
-            canvasRef.current.width = 1920;
-            canvasRef.current.height = 1080;
+            if (canvasRef.current.width !== 1920) {
+                console.log("about to set width")
+                canvasRef.current.width = 1920;
+            }
+            if (canvasRef.current.height !== 1080) {
+                console.log("about to set height")
+                canvasRef.current.height = 1080;
+            }
         }
+        /*
         if (activeWorker) {
             cleanup(activeWorker)
             setWorker(null)
@@ -85,7 +96,7 @@ const GameContainer = props => {
         setOffscreenCanvas(offscreen);
 
         return () => cleanup(activeWorker)
-    }, [canvasRef])
+    }, [canvasRef, activeWorker, props.dwitter_id, props.game, offscreenCanvas])
 
     useEffect(() => {
         if (activeWorker && currentGameVars) {
