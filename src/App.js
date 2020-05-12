@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from "styled-components"
 
-import { AppBar } from '@material-ui/core';
+import { AppBar, Input } from '@material-ui/core';
 
 import GameContainer from "./GameContainer"
 
@@ -10,20 +10,19 @@ const MainWrapper = styled.div`
 `
 
 const App = () => {
-  const [id, setId] = useState(15736)
-  useEffect(() => {
-    setTimeout(() => {
-      console.log("Changing id!")
-      setId(15738)
-    }, 1000)
-  })
+  const [dwitter_id, setId] = useState(15736)
 
   return (
     <div>
       <AppBar />
       <MainWrapper className="App">
         <GameContainer game="offscreen_dwitter_test"/>
-        <GameContainer dwitter_id={id}/>
+        <GameContainer dwitter_id={dwitter_id}/>
+        <Input type="number" value={dwitter_id} onChange={(event, newValue) => {
+          let num = parseInt(event.target.value);
+          num = num < 0 ? null : num;
+          setId(num)
+         }} />
       </MainWrapper>
     </div>
   );

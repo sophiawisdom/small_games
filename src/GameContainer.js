@@ -101,27 +101,33 @@ const GameContainer = props => {
     // Force re-render/re-creation of the canvas.
     const key = props.game ? props.game : props.dwitter_id
 
+    if (key == null) {
+        return 
+    }
+
+    var containerPieces = [(<TransformedCanvas
+    ref={canvasRef}
+    id={`canvas_${props.game}`}
+    key={key}
+    />),
+    (<OnRight>
+        { finishedLoading ? varsConfig.map(conf =>
+        <VariableRange
+        defaultValue={conf.default}
+        currentValue={currentGameVars[conf.key]}
+        name={conf.description}
+        min={conf.min}
+        max={conf.max}
+        onChange={newValue => setCurrentGameVars({...currentGameVars, [conf.key]: newValue})}
+        />)
+        : null}
+    </OnRight>)]
+
     return (
         <div>
             <div>
                 <SmallerContainer>
-                    <TransformedCanvas
-                    ref={canvasRef}
-                    id={`canvas_${props.game}`}
-                    key={key}
-                    />
-                    <OnRight>
-                        { finishedLoading ? varsConfig.map(conf =>
-                        <VariableRange
-                        defaultValue={conf.default}
-                        currentValue={currentGameVars[conf.key]}
-                        name={conf.description}
-                        min={conf.min}
-                        max={conf.max}
-                        onChange={newValue => setCurrentGameVars({...currentGameVars, [conf.key]: newValue})}
-                        />)
-                        : null}
-                    </OnRight>
+                    {key == null ? <div /> : containerPieces}
                 </SmallerContainer>
             </div>
 
