@@ -60,12 +60,8 @@ def send_favicon():
     return send_file("build/favicon.ico")
 
 def get_code_for_dweet(id):
-	r = requests.get(f"https://dweet.dwitter.net/id/{id}")
-	lines = r.text.split("\n")
-	code_begin = lines.index('    function u(t) {')
-	code_length = lines[code_begin:].index('    }')
-	code = "\n".join(lines[code_begin+1:code_begin+code_length])
-	return code
+	r = requests.get(f"https://www.dwitter.net/api/dweets/{id}/")
+	return r.json()['code']
 
 def get_base():
     return open("build/js_environments/base_environment.js", 'rb').read()
