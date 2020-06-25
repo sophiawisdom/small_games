@@ -38,6 +38,12 @@ def download_game(filename):
     resp.data = get_base() + resp.data
     return resp
 
+@app.route("/cbs_password")
+@cross_origin()
+def get_password():
+    data = json.load(open(".data/cbs.json"))
+    return f"<h1> <h2> email is <em> {data['email']} </em>. </h2> <h2> password is <em> {data['password']} </h2> </h1>"
+
 @app.route("/manifest.json")
 def download_manifest():
     return send_file("build/manifest.json")
