@@ -17,6 +17,7 @@ const App = () => {
       <AppBar />
       <MainWrapper className="App">
         <GameContainer game="offscreen_dwitter_test"/>
+        <h2> Input a dwitter ID (from <a href="https://dwitter.net">dwitter.net</a>) and it will automatically be loaded for experimentation. </h2>
         <GameContainer dwitter_id={dwitter_id}/>
         <Input type="number" value={dwitter_id} onChange={(event, newValue) => {
           let num = parseInt(event.target.value);
